@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "556050273632",
+    "firebase_url": "https://blink-102-fm.firebaseio.com",
+    "project_id": "blink-102-fm",
+    "storage_bucket": "blink-102-fm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556050273632:android:455b0da820c71107",
+        "android_client_info": {
+          "package_name": "net.handsmidia.blink102"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "556050273632-ngjp54b7h2n50f16ggis7c03g5jsflgc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.handsmidia.blink102",
+            "certificate_hash": "fc15ee836860a02f70c39fb7adc9c0ccc5bdeec7"
+          }
+        },
+        {
+          "client_id": "556050273632-sud9atlvoeqatpulnf8f98si6j49cblt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.handsmidia.blink102",
+            "certificate_hash": "fe0d714c0452a4c3552d092e25c3f11dcb4d0c90"
+          }
+        },
+        {
+          "client_id": "556050273632-t37ompu1n5v05kf98h4lftdac15pi2t5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmY4QbTT6I-74ij9DFP5v_IvPP2gYmnkc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "556050273632-t37ompu1n5v05kf98h4lftdac15pi2t5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "556050273632-mj457cp3776afctfqqudcnq83suplu6v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.handsmidia.blinkfm"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

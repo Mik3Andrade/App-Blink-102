@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name"> Blink 102 FM</string>
+    <string name="url_streaming">http://184.154.89.186:9002/stream</string>
+    <string name="app_text">Blink 102 FM</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
