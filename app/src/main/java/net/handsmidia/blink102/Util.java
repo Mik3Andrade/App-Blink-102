@@ -165,7 +165,7 @@ public class Util {
                         public void onDismiss(DialogInterface dialog) {
                             activity.requestPermissions(
                                     new String[]
-                                            {Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_CONTACT);
+                                            {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS}, PERMISSION_REQUEST_CONTACT);
                         }
                     });
                     builder.show();
@@ -173,7 +173,7 @@ public class Util {
                 } else {
 
                     ActivityCompat.requestPermissions(activity,
-                            new String[]{Manifest.permission.READ_CONTACTS},
+                            new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS},
                             PERMISSION_REQUEST_CONTACT);
                 }
             }

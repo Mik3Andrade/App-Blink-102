@@ -5,6 +5,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -65,6 +67,8 @@ public class FragmentBlink extends Fragment implements AdapterBlink.Callback {
 
                 adapterBlink.update(listaImg);
 
+                automaticScroll();
+
             }
 
             @Override
@@ -78,6 +82,28 @@ public class FragmentBlink extends Fragment implements AdapterBlink.Callback {
 
         return view;
 
+
+    }
+
+    private void automaticScroll() {
+
+        if(!listaImg.isEmpty()) {
+
+            recyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    new CountDownTimer(60000, 200 ) {
+                        public void onTick(long millis) {
+                            recyclerView.scrollBy(0, listaImg.size());
+                        }
+
+                        public void onFinish() {
+
+                        }
+                    }.start();
+                }
+            });
+        }
 
     }
 
