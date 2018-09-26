@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
     <application
-        android:name=".CustomApplication"
+        android:name=".utilities.CustomApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_icon_main"
@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashActivity"
+            android:name=".view.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -27,21 +27,28 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".MediaService" />
+        <service android:name=".utilities.MediaService" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".TelaWhats"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+
+            <intent-filter>
+                <action android:name="fcm.ACTION.HELLO"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.TelaWhats"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
-        <activity android:name=".RedeSocial"
+        <activity android:name=".view.RedeSocial"
             android:screenOrientation="portrait" />
-        <activity android:name=".WebViewSite"
+        <activity android:name=".view.WebViewSite"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
-        <activity android:name=".TelaLocalizacao"
+        <activity android:name=".view.TelaLocalizacao"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
     </application>

@@ -1,9 +1,12 @@
-package net.handsmidia.blink102;
+package net.handsmidia.blink102.view;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+
+import net.handsmidia.blink102.R;
+import net.handsmidia.blink102.utilities.Utils;
 
 public class SplashActivity extends AppCompatActivity {
 

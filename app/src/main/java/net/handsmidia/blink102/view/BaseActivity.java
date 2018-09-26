@@ -1,4 +1,4 @@
-package net.handsmidia.blink102;
+package net.handsmidia.blink102.view;
 
 import android.support.v7.app.AppCompatActivity;
 

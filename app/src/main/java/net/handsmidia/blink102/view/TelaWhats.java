@@ -1,4 +1,4 @@
-package net.handsmidia.blink102;
+package net.handsmidia.blink102.view;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import net.handsmidia.blink102.R;
+import net.handsmidia.blink102.utilities.Utils;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package net.handsmidia.blink102;
+package net.handsmidia.blink102.utilities;
 
 import android.app.Application;
 

@@ -1,4 +1,6 @@
 package net.handsmidia.blink102.utilities;
 
-interface ICallServices {
+public interface ICallServices {
+    void exit();
+    void minimize();
 }

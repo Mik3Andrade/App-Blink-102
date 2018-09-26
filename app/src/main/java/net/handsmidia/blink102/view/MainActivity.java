@@ -1,6 +1,5 @@
-package net.handsmidia.blink102;
+package net.handsmidia.blink102.view;
 
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,9 +7,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -36,12 +38,18 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import net.handsmidia.blink102.R;
+import net.handsmidia.blink102.utilities.ICallServices;
+import net.handsmidia.blink102.utilities.IcyStreamMeta;
+import net.handsmidia.blink102.utilities.MediaService;
+import net.handsmidia.blink102.utilities.Utils;
+
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class MainActivity extends BaseActivity implements ICallClose {
+public class MainActivity extends BaseActivity implements ICallServices {
 
     private Button mBtnPlay;
     private ProgressBar mLoading;
@@ -50,7 +58,6 @@ public class MainActivity extends BaseActivity implements ICallClose {
     boolean mBounded;
     FrameLayout container;
     public TextView mTitleMusic;
-    //private CoverGenerator coverGenerator;
     private boolean timerIndicator = false;
     private Timer timer = new Timer();
     private static boolean isStarted = false;
@@ -68,11 +75,11 @@ public class MainActivity extends BaseActivity implements ICallClose {
         mTitleMusic = (TextView) findViewById(R.id.tv_title_music);
         container = findViewById(R.id.container);
 
-        if(fragmentBlink == null) {
+        if (fragmentBlink == null) {
             fragmentBlink = new FragmentBlink();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.add(R.id.container, fragmentBlink);
             fragmentTransaction.commit();
         }
@@ -103,7 +110,18 @@ public class MainActivity extends BaseActivity implements ICallClose {
 
             Intent intent = new Intent(getApplicationContext(), MediaService.class);
             intent.setAction(MediaService.ACTION_PLAY);
-            startService(intent);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent);
+            }else {
+
+                startService(intent);
+            }
+            isStarted = true;
+
+            bindService(intent, mConnection, BIND_AUTO_CREATE);
+            LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("my-event"));
+
         }
 
         mBtnPlay.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +153,7 @@ public class MainActivity extends BaseActivity implements ICallClose {
         });
 
 
-        Button btn1 = (Button)findViewById(R.id.button);
+        Button btn1 = (Button) findViewById(R.id.button);
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +162,7 @@ public class MainActivity extends BaseActivity implements ICallClose {
             }
         });
 
-        Button btn = (Button)findViewById(R.id.button1);
+        Button btn = (Button) findViewById(R.id.button1);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,12 +175,6 @@ public class MainActivity extends BaseActivity implements ICallClose {
     @Override
     public void onResume() {
         super.onResume();
-
-        if(!isServiceRunning(mConnection.getClass())) {
-            Intent mIntent = new Intent(this, MediaService.class);
-            bindService(mIntent, mConnection, BIND_AUTO_CREATE);
-            LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("my-event"));
-        }
     }
 
     ServiceConnection mConnection = new ServiceConnection() {
@@ -253,7 +265,7 @@ public class MainActivity extends BaseActivity implements ICallClose {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mTitleMusic.setText(trackTitle);
+                                    mTitleMusic.setText(trackTitle.isEmpty() ? "BLINK 102 FM" : trackTitle);
                                     mService.setTrackMusic(trackTitle);
                                 }
                             });
@@ -267,24 +279,9 @@ public class MainActivity extends BaseActivity implements ICallClose {
         }
     }
 
-    public static String getTrackTitle() {
-        return trackTitle;
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
-
-    }
-
-    private boolean isServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -296,7 +293,6 @@ public class MainActivity extends BaseActivity implements ICallClose {
     public void exit() {
         timer.cancel();
         mPlayer.setPlayWhenReady(false);
-        mService.finishMedia();
         mService.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         finish();

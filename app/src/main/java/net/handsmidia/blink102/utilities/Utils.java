@@ -1,4 +1,4 @@
-package net.handsmidia.blink102;
+package net.handsmidia.blink102.utilities;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -22,6 +22,8 @@ import android.support.v7.app.AlertDialog;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.widget.Toast;
+
+import net.handsmidia.blink102.R;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -211,7 +213,7 @@ public class Utils {
         }
     }
 
-    public static void showMessage(Context context, ICallClose callback){
+    public static void showMessage(Context context, ICallServices callback){
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setTitle("ATENÇÃO");

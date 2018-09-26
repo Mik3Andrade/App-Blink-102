@@ -1,4 +1,4 @@
-package net.handsmidia.blink102;
+package net.handsmidia.blink102.utilities;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,8 +36,12 @@ public class IcyStreamMeta {
             return "";
 
         String streamTitle = data.get("StreamTitle");
-        String title = streamTitle.substring(0, streamTitle.indexOf("-"));
-        return title.trim();
+        if(streamTitle.isEmpty()){
+            return "";
+        }else {
+            String title = streamTitle.substring(0, streamTitle.indexOf("-"));
+            return title.trim();
+        }
     }
 
     /**

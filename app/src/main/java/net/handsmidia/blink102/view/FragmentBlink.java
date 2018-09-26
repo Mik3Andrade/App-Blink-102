@@ -1,12 +1,10 @@
-package net.handsmidia.blink102;
+package net.handsmidia.blink102.view;
 
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -22,6 +20,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import net.handsmidia.blink102.R;
+import net.handsmidia.blink102.adapter.AdapterBlink;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,8 +67,6 @@ public class FragmentBlink extends Fragment implements AdapterBlink.Callback {
                 }
 
                 adapterBlink.update(listaImg);
-
-                automaticScroll();
 
             }
 

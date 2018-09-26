@@ -5,11 +5,10 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
-    tools:context=".FragmentBlink">
+    android:layout_marginTop="20dp"
+    tools:context=".view.FragmentBlink">
 
-    <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="40dp"
         android:id="@+id/recyclerImg"
         android:scrollbars="vertical"
         android:gravity="center"
