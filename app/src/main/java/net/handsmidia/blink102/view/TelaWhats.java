@@ -23,7 +23,7 @@ public class TelaWhats extends AppCompatActivity {
     private RelativeLayout mLoading;
     private ImageView mImagem;
     private Context mContext;
-    private Util mUtil;
+    private Utils mUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +33,17 @@ public class TelaWhats extends AppCompatActivity {
         mLoading = (RelativeLayout) findViewById(R.id.loading_view_aguarde);
         mImagem = (ImageView) findViewById(R.id.iv_tela_fale_conosco);
         mContext = this;
-        mUtil = new Util(mContext);
-        mUtil.permissaoAcessarContatos(this);
+        mUtils = new Utils(mContext);
+        mUtils.permissaoAcessarContatos(this);
         mImagem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 showLoading();
 
-                String value = mUtil.getPref(Util.PERGUNTARNOVAMENTE);
-                if (mUtil.verificarContatoNaAgenda().contains(Util.NOMERADIO) || value != null) {
+                String value = mUtils.getPref(Utils.PERGUNTARNOVAMENTE);
+                if (mUtils.verificarContatoNaAgenda().contains(Utils.NOMERADIO) || value != null) {
                     hideLoading();
-                    mUtil.abrirWhatsapp(Util.NUMERORADIO);
+                    mUtils.abrirWhatsapp(Utils.NUMERORADIO);
                 } else {
                     hideLoading();
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -54,13 +54,13 @@ public class TelaWhats extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             showLoading();
-                            criarContatoNaAgenda(Util.NOMERADIO, Util.NUMERORADIO);
-                            mUtil.putPref(Util.EXISTE, "contatoExiste");
+                            criarContatoNaAgenda(Utils.NOMERADIO, Utils.NUMERORADIO);
+                            mUtils.putPref(Utils.EXISTE, "contatoExiste");
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     finish();
-                                    mUtil.abrirWhatsapp(Util.NUMERORADIO);
+                                    mUtils.abrirWhatsapp(Utils.NUMERORADIO);
                                 }
                             }, 1000);
                         }
@@ -68,8 +68,8 @@ public class TelaWhats extends AppCompatActivity {
                     builder.setNegativeButton("Nāo", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            mUtil.abrirWhatsapp(Util.NUMERORADIO);
-                            mUtil.putPref(Util.PERGUNTARNOVAMENTE, "perguntarNomenteOk");
+                            mUtils.abrirWhatsapp(Utils.NUMERORADIO);
+                            mUtils.putPref(Utils.PERGUNTARNOVAMENTE, "perguntarNomenteOk");
                         }
                     });
                     builder.show();

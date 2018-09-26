@@ -1,19 +1,17 @@
 package net.handsmidia.blink102;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -21,23 +19,16 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -50,7 +41,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class MainActivity extends AppCompatActivity implements ExoPlayer.EventListener {
+public class MainActivity extends BaseActivity implements ICallClose {
 
     private Button mBtnPlay;
     private ProgressBar mLoading;
@@ -64,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements ExoPlayer.EventLi
     private Timer timer = new Timer();
     private static boolean isStarted = false;
     private static String trackTitle = "Blink 102 FM";
-    private Button button;
-    private Button button1;
+
+    private FragmentBlink fragmentBlink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +67,15 @@ public class MainActivity extends AppCompatActivity implements ExoPlayer.EventLi
 
         mTitleMusic = (TextView) findViewById(R.id.tv_title_music);
         container = findViewById(R.id.container);
-        FragmentBlink fragmentBlink = new FragmentBlink();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.container, fragmentBlink);
-        fragmentTransaction.commit();
 
+        if(fragmentBlink == null) {
+            fragmentBlink = new FragmentBlink();
 
-
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.container, fragmentBlink);
+            fragmentTransaction.commit();
+        }
 
         mBtnPlay = (Button) findViewById(R.id.btnPlay);
         mLoading = (ProgressBar) findViewById(R.id.loading);
@@ -107,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ExoPlayer.EventLi
 
         mTitleMusic.setText(trackTitle);
 
-        if (isConnected()) {
+        if (Utils.isConnected(this)) {
 
             Intent intent = new Intent(getApplicationContext(), MediaService.class);
             intent.setAction(MediaService.ACTION_PLAY);
@@ -119,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements ExoPlayer.EventLi
             @Override
             public void onClick(View v) {
 
-                if (isConnected()) {
+                if (Utils.isConnected(MainActivity.this)) {
                     if (!mPlayer.getPlayWhenReady()) {
                         mPlayer.setPlayWhenReady(true);
                         mBtnPlay.setBackgroundResource(R.drawable.stop_button);
@@ -160,23 +152,17 @@ public class MainActivity extends AppCompatActivity implements ExoPlayer.EventLi
             }
         });
 
-        // Button btn2 = (Button)findViewById(R.id.button2);
-        //btn2.setOnClickListener(new View.OnClickListener() {
-        //     @Override
-        //     public void onClick(View v) {
-        //        startActivity(new Intent(MainActivity.this, RedeSocial.class));
-        //    }
-        // });
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Intent mIntent = new Intent(this, MediaService.class);
-        bindService(mIntent, mConnection, BIND_AUTO_CREATE);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("my-event"));
+        if(!isServiceRunning(mConnection.getClass())) {
+            Intent mIntent = new Intent(this, MediaService.class);
+            bindService(mIntent, mConnection, BIND_AUTO_CREATE);
+            LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("my-event"));
+        }
     }
 
     ServiceConnection mConnection = new ServiceConnection() {
@@ -245,61 +231,6 @@ public class MainActivity extends AppCompatActivity implements ExoPlayer.EventLi
         }
     };
 
-    @Override
-    public void onLoadingChanged(boolean isLoading) {
-        Log.d("", "");
-    }
-
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        Log.d("", "");
-    }
-
-    @Override
-    public void onRepeatModeChanged(int repeatMode) {
-        Log.d("", "");
-    }
-
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-        Log.d("", "");
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-        Log.d("", "");
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-        Log.d("", "");
-    }
-
-    @Override
-    public void onPositionDiscontinuity() {
-        Log.d("", "");
-    }
-
-    @Override
-    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-        Log.d("", "");
-    }
-
-    private boolean isConnected() {
-
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        } else {
-            Toast.makeText(this, "Sem conexao!", Toast.LENGTH_LONG).show();
-        }
-
-        return false;
-    }
-
     public void startThread() {
         if (!timerIndicator) {
             timerIndicator = true;
@@ -338,5 +269,47 @@ public class MainActivity extends AppCompatActivity implements ExoPlayer.EventLi
 
     public static String getTrackTitle() {
         return trackTitle;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Utils.showMessage(this, this);
+    }
+
+    @Override
+    public void exit() {
+        timer.cancel();
+        mPlayer.setPlayWhenReady(false);
+        mService.finishMedia();
+        mService.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        finish();
+    }
+
+    @Override
+    public void minimize() {
+        moveTaskToBack(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        exit();
     }
 }

@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -27,7 +29,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Joabson on 04/08/17.
  */
 
-public class Util {
+public class Utils {
 
     public static final String PREFS_NAME = "MyApp_Settings";
     private static final int PERMISSION_REQUEST_CONTACT = 1;
@@ -38,7 +40,7 @@ public class Util {
 
     private Context mContext;
 
-    public Util(Context context){
+    public Utils(Context context){
         mContext = context;
     }
 
@@ -190,6 +192,67 @@ public class Util {
     public String getPref(String key) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         return preferences.getString(key, null);
+    }
+
+
+    public static String getContain(String title) {
+        String[] feats = {"featuring","feat.","feat", "Feat", "Feat.", "ft.","ft", "(ft", "(Ft", "Ft.", "Ft", "(Feat", "(Feat.", "(Original", "(original", "(Remix", "(remix", "(Le"};
+        for (int i =0; i<feats.length; i++){
+            if(title.contains(feats[i]))
+                return feats[i];
+        }
+        return null;
+    }
+
+    public static void setStatusBarColor(Activity activity){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().setStatusBarColor(
+                    activity.getResources().getColor(R.color.colorPrimary));
+        }
+    }
+
+    public static void showMessage(Context context, ICallClose callback){
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle("ATENÇÃO");
+        alertDialogBuilder
+                .setMessage("Deseja realmente sair?")
+                .setCancelable(false)
+                .setPositiveButton("Sim",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        callback.exit();
+                    }
+                })
+                .setNeutralButton("Minimizar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        callback.minimize();
+                    }
+                })
+                .setNegativeButton("Não",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
+    public static boolean isConnected(Context context) {
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            Toast.makeText(context, "Sem conexao!", Toast.LENGTH_LONG).show();
+        }
+
+        return false;
     }
 }
 

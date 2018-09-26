@@ -32,6 +32,7 @@ public class MediaService extends Service {
     Binder mBinder = new LocalBinder();
     private NotificationManager mNotificationManager;
     private String trackMusic = "Blink 102 FM";
+    private String TAG_NOTIFICATION = "NOTIFICATION";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -72,15 +73,19 @@ public class MediaService extends Service {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void buildNotification(Notification.Action action, String textNotification) {
         Notification.MediaStyle style = new Notification.MediaStyle();
-        Intent intent = new Intent(getApplicationContext(), MediaService.class);
-        intent.setAction(ACTION_STOP);
-        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification.Builder builder = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.ic_radio_black_24dp)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(textNotification)
                 .setDeleteIntent(pendingIntent)
+                .setOngoing(true)
                 .setAutoCancel(true)
                 .setStyle(style);
 
@@ -88,7 +93,7 @@ public class MediaService extends Service {
         style.setShowActionsInCompactView(0);
 
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(0, builder.build());
+        mNotificationManager.notify(TAG_NOTIFICATION, 0, builder.build());
 
     }
 
@@ -161,7 +166,7 @@ public class MediaService extends Service {
     public void finishMedia() {
         if (mNotificationManager != null) {
             mNotificationManager.cancelAll();
-            mNotificationManager.cancel(0);
+            mNotificationManager.cancel(TAG_NOTIFICATION, 0);
         }
         doService(false, "finish");
     }
@@ -171,6 +176,11 @@ public class MediaService extends Service {
         intent.putExtra("message", value);
         intent.putExtra("finish", finishApp);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     public String getTrackMusic() {
