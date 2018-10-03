@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.handsmidia.blink102.R;
 import net.handsmidia.blink102.adapter.AdapterBlink;
+import net.handsmidia.blink102.model.ImageForFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.List;
 public class FragmentBlink extends Fragment implements AdapterBlink.Callback {
 
     RecyclerView recyclerView;
-    List<String> listaImg;
+    List<ImageForFragment> listaImg;
     AdapterBlink adapterBlink;
     private DatabaseReference mDatabase;
 
@@ -62,8 +63,10 @@ public class FragmentBlink extends Fragment implements AdapterBlink.Callback {
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
-                    String url = (String) postSnapshot.getValue();
-                    listaImg.add(url);
+                    ImageForFragment object = new ImageForFragment();
+                    object.setmUrlImage(postSnapshot.child("imagem").getValue().toString());
+                    object.setmUrl(postSnapshot.child("url").getValue().toString());
+                    listaImg.add(object);
                 }
 
                 adapterBlink.update(listaImg);
@@ -107,10 +110,10 @@ public class FragmentBlink extends Fragment implements AdapterBlink.Callback {
     }
 
     @Override
-    public void onItemChecked(String imageClicable) {
+    public void onItemChecked(ImageForFragment object) {
         String url = "http://www.blink102.com.br";
 
-        Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
+        Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(object.getmUrl()));
         startActivity(intent);
     }
 }

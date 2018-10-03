@@ -12,16 +12,17 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import net.handsmidia.blink102.R;
+import net.handsmidia.blink102.model.ImageForFragment;
 
 import java.util.List;
 
 public class AdapterBlink extends RecyclerView.Adapter<AdapterBlink.ViewHolder> {
 
-    List<String> listImages;
+    List<ImageForFragment> listImages;
     private Callback mCall;
     Context context;
 
-    public AdapterBlink(List<String> list, Context context) {
+    public AdapterBlink(List<ImageForFragment> list, Context context) {
         this.listImages = list;
         this.context = context;
     }
@@ -37,15 +38,15 @@ public class AdapterBlink extends RecyclerView.Adapter<AdapterBlink.ViewHolder> 
     @Override
     public void onBindViewHolder(AdapterBlink.ViewHolder holder, final int position) {
 
-        final String urlImage = listImages.get(position);
+        final ImageForFragment object = listImages.get(position);
 
         if (context != null && !((Activity) context).isFinishing()) {
             Glide.with(context)
-                    .load(urlImage)
+                    .load(object.getmUrlImage())
                     .into(holder.imgEdit);
         }
 
-        holder.imgEdit.setOnClickListener(v -> mCall.onItemChecked(urlImage));
+        holder.imgEdit.setOnClickListener(v -> mCall.onItemChecked(object));
     }
 
     @Override
@@ -53,7 +54,7 @@ public class AdapterBlink extends RecyclerView.Adapter<AdapterBlink.ViewHolder> 
         return listImages.size();
     }
 
-    public void update(List<String> listaImg) {
+    public void update(List<ImageForFragment> listaImg) {
 
         listImages = listaImg;
         notifyDataSetChanged();
@@ -70,7 +71,7 @@ public class AdapterBlink extends RecyclerView.Adapter<AdapterBlink.ViewHolder> 
     }
 
     public interface Callback {
-        void onItemChecked(String imageClicable);
+        void onItemChecked(ImageForFragment imageClicable);
     }
 
     public void setCall(final Callback call) {
